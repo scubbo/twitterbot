@@ -1,9 +1,0 @@
-Twitterbot
-==========
-
-Files to automate interaction with a Twitter account
-
-AUTHENTICATION
-==============
-
-System expects a file named 'api.pkl' in the root directory. It should be a dump (via the Python module `pickle`) of the api object acquired from...something. It's been a while since I've used this...
