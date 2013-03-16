@@ -1,12 +1,14 @@
 # Twitterbot #
 
-This script provides an interface to interact with a Twitter account
+This script provides an easy way to authenticate a request for an api in python-twitter
 
 ## Dependencies ##
 
 Requires: 
 * python-twitter
 
-## Authentication ##
+## Usage ##
 
-The script expects a file named api.pkl in the same folder. It should contain a dump (from the Python module `pickle`) of...something? It's been a while...
+    import tb
+    t = tb.Twitterbot(consumer_secret, consumer_key)
+    api = t.getAPI()
