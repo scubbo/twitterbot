@@ -1,6 +1,6 @@
 # Twitterbot #
 
-This script provides an easy way to authenticate a request for an api in python-twitter.
+This script provides an easy way to authenticate a request for an api in python-twitter. It is fun.
 
 ## Dependencies ##
 
