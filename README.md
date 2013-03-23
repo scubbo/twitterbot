@@ -1,7 +1,7 @@
 # Twitterbot #
 
 This script provides an easy way to authenticate a request for an api in python-twitter.
-Cats. Whatever.
+Cats. Whatever. They rock.
 
 ## Dependencies ##
 
