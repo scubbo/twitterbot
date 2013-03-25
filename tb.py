@@ -13,20 +13,23 @@ from binascii import b2a_base64
 from webbrowser import open as wb_open
 
 class Twitterbot:
-    def __init__(self, consumer_key, consumer_secret, api=None):
+    def __init__(self, consumer_key=None, consumer_secret=None, api=None):
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
         if api != None:
             self.api = api
         else:
             if os.path.exists('api.pkl'):
-                with file('api.pkl', 'rb') as f:
-                    details = pickle.load(f)
-                if type(details) == type(()) and len(details) == 4:
-                    if self.consumer_key == details[0] and self.consumer_secret == details[1]:
-                        self.api = twitter.Api(details[0], details[1], details[2], details[3])
-                        return None
-            self.api = self.getAPI()
+                try:
+                    with file('api.pkl', 'rb') as f:
+                        details = pickle.load(f)
+                    self.api = twitter.Api(details[0], details[1], details[2], details[3])
+                except KeyError:
+                    raise ValueError('\'api.pkl\' does not contain the details of a Twitter api')
+                except IndexError:
+                    raise ValueError('object stored in \'api.pkl\' does not have 4 elements (and probably is not a Twitter api description')
+            else:
+                self.api = self.getAPI()
     
     def getAPI(self):
         oauth_token = self.requestPIN()
@@ -59,7 +62,8 @@ class Twitterbot:
         data = dict([tuple(i.split('=')) for i in response.read().split('&')])
         if data['oauth_callback_confirmed'] != 'true':
             raise ValueError('callback not confirmed')
-        wb_open('https://api.twitter.com/oauth/authenticate?oauth_token=' + data['oauth_token'], 2)
+        pinURL = 'https://api.twitter.com/oauth/authenticate?oauth_token=' + data['oauth_token']
+        if not wb_open(pinURL, 2): print 'The pin URL is ' + pinURL
         return data['oauth_token']
         
     def validateUser(self, PIN, oauthToken):
@@ -117,5 +121,11 @@ class Twitterbot:
         nonce = ''.join(c for c in nonce if c in string.lowercase+string.uppercase+string.digits)
         return nonce
 
-if __name__ == '__main__':
-    tb = Twitterbot('ieeixw2mrCvnGUltwe0ZxQ', '7DGFHWN1N08pdxAc3gD4tVNFybFU96cXUPz96xmg')
+def generateAPI():
+    if not os.path.exists('api.pkl'):
+        consumer_key = raw_input('Please enter consumer key >>>>>> ')
+        consumer_secret = raw_input('Please enter consumer secret >>> ')
+        twitterbot = Twitterbot(consumer_key, consumer_secret)
+    else:
+        twitterbot = Twitterbot()
+    return twitterbot.api
